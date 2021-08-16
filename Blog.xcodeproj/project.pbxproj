@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		185A6A4126C8C73D0077CD3D /* CreatePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A6A4026C8C73D0077CD3D /* CreatePost.swift */; };
+		185D179B26C827300043912B /* BlogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185D179A26C827300043912B /* BlogViewModel.swift */; };
+		185D179D26C827640043912B /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185D179C26C827640043912B /* Post.swift */; };
 		1880BAE326C817A400BEA9B6 /* BlogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1880BAE226C817A400BEA9B6 /* BlogApp.swift */; };
 		1880BAE526C817A400BEA9B6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1880BAE426C817A400BEA9B6 /* ContentView.swift */; };
 		1880BAE726C817A400BEA9B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1880BAE626C817A400BEA9B6 /* Assets.xcassets */; };
@@ -15,15 +18,20 @@
 		1880BAF426C81BAC00BEA9B6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1880BAF326C81BAC00BEA9B6 /* FirebaseFirestore */; };
 		1880BAF626C81BAC00BEA9B6 /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 1880BAF526C81BAC00BEA9B6 /* FirebaseFirestoreSwift-Beta */; };
 		1880BAF826C81C3000BEA9B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1880BAF726C81C3000BEA9B6 /* GoogleService-Info.plist */; };
+		1880BAFC26C8210700BEA9B6 /* BlogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1880BAFB26C8210700BEA9B6 /* BlogView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		185A6A4026C8C73D0077CD3D /* CreatePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePost.swift; sourceTree = "<group>"; };
+		185D179A26C827300043912B /* BlogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogViewModel.swift; sourceTree = "<group>"; };
+		185D179C26C827640043912B /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		1880BADF26C817A400BEA9B6 /* Blog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1880BAE226C817A400BEA9B6 /* BlogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogApp.swift; sourceTree = "<group>"; };
 		1880BAE426C817A400BEA9B6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1880BAE626C817A400BEA9B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1880BAE926C817A400BEA9B6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1880BAF726C81C3000BEA9B6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1880BAFB26C8210700BEA9B6 /* BlogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,10 @@
 			isa = PBXGroup;
 			children = (
 				1880BAE226C817A400BEA9B6 /* BlogApp.swift */,
+				1880BAFB26C8210700BEA9B6 /* BlogView.swift */,
+				185A6A4026C8C73D0077CD3D /* CreatePost.swift */,
+				185D179A26C827300043912B /* BlogViewModel.swift */,
+				185D179C26C827640043912B /* Post.swift */,
 				1880BAE426C817A400BEA9B6 /* ContentView.swift */,
 				1880BAE626C817A400BEA9B6 /* Assets.xcassets */,
 				1880BAF726C81C3000BEA9B6 /* GoogleService-Info.plist */,
@@ -156,7 +168,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1880BAE526C817A400BEA9B6 /* ContentView.swift in Sources */,
+				1880BAFC26C8210700BEA9B6 /* BlogView.swift in Sources */,
+				185D179B26C827300043912B /* BlogViewModel.swift in Sources */,
+				185A6A4126C8C73D0077CD3D /* CreatePost.swift in Sources */,
 				1880BAE326C817A400BEA9B6 /* BlogApp.swift in Sources */,
+				185D179D26C827640043912B /* Post.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,7 +311,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -325,7 +341,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
