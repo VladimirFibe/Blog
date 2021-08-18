@@ -8,294 +8,130 @@
 import SwiftUI
 
 struct CreatePost: View {
-  @EnvironmentObject var blogData : BlogViewModel
-  
-  // Post Properties...
-  @State var postTitle = ""
-  @State var authorName = ""
-  @State var postContent : [PostContent] = []
-  
-  // Keyboard Focus State for TextViews...
+  @EnvironmentObject var viewModel: BlogViewModel
+  @State var post = Post()
   @FocusState var showKeyboard: Bool
-  
   var body: some View {
-      
-      // Since we need Nav Buttons...
-      // So Including NavBar...
-      NavigationView{
+    NavigationView {
+      ScrollView(.vertical, showsIndicators: false) {
+        VStack {
+          TextField("Post Title", text: $post.title)
+          TextField("Author", text: $post.author)
           
-          ScrollView(.vertical, showsIndicators: false, content: {
-              
-              VStack(spacing: 15){
-                  
-                  VStack(alignment: .leading){
-                      
-                      TextField("Post Title", text: $postTitle)
-                          .font(.title2)
-                      
-                      Divider()
-                  }
-                  
-                  VStack(alignment: .leading,spacing: 11){
-                      
-                      Text("Author:")
-                          .font(.caption.bold())
-                      
-                      TextField("iJustine", text: $authorName)
-                      
-                      Divider()
-                  }
-                  .padding(.top,5)
-                  .padding(.bottom,20)
-                  
-                  // iterating Post Content...
-                  ForEach($postContent){$content in
-                      
-                      VStack{
-                          
-                          // Image URL...
-                          if content.type == .Image{
-                              
-                              if content.showImage && content.value != ""{
-                                  
-                                  WebImage(url: content.value)
-                                  // if tap change url..
-                                      .onTapGesture {
-                                          withAnimation{
-                                              content.showImage = false
-                                          }
-                                      }
-                              }
-                              else{
-                                  
-                                  // Textfield For URL...
-                                  VStack{
-                                      
-                                      TextField("Image URL", text: $content.value, onCommit:  {
-                                          
-                                          withAnimation{
-                                              content.showImage = true
-                                          }
-                                          // To Show Image when Pressed Retrun....
-                                      })
-                                      
-                                      Divider()
-                                  }
-                                  .padding(.leading,5)
-                              }
-                          }
-                          else{
-                              
-                              // Custom Text Editor From UIKit...
-                              TextView(text: $content.value, height: $content.height, fontSize: getFontSize(type: content.type))
-                                  .focused($showKeyboard)
-                              // Approx Height Based on Font for First Display...
-                                  .frame(height: content.height == 0 ? getFontSize(type: content.type) * 2 : content.height)
-                                  .background(
-                                  
-                                      Text(content.type.rawValue)
-                                          .font(.system(size: getFontSize(type: content.type)))
-                                          .foregroundColor(.gray)
-                                          .opacity(content.value == "" ? 0.7 : 0)
-                                          .padding(.leading,5)
-                                      
-                                      ,alignment: .leading
-                                  )
-                          }
-                      }
-                      .frame(width: UIScreen.main.bounds.width - 30)
-                      .contentShape(Rectangle())
-                      .contentShape(Rectangle())
-                      // Swipe To Delete...
-                      .gesture(DragGesture().onEnded({ value in
-                          
-                          if -value.translation.width < (UIScreen.main.bounds.width / 2.5) && !content.showDeleteAlert{
-                              // Showing ALert....
-                              content.showDeleteAlert = true
-                          }
-                          
-                      }))
-                      .alert("Sure to delete this content?", isPresented: $content.showDeleteAlert) {
-                          
-                          Button("Delete",role: .destructive){
-                              // Deleting Content...
-                              let index = postContent.firstIndex { currentPost in
-                                  return currentPost.id == content.id
-                              } ?? 0
-                              
-                              withAnimation{
-                                  postContent.remove(at: index)
-                              }
-                          }
-                      }
-                  }
-                  
-                  // Menu Button to insert Post Content...
-                  Menu {
-                      
-                      // Iterating Cases...
-                      ForEach(PostType.allCases,id: \.rawValue){type in
-                          
-                          Button(type.rawValue){
-                              
-                              // Appending New PostCOntent...
-                              withAnimation{
-                                  postContent.append(PostContent(value: "", type: type))
-                              }
-                          }
-                      }
-                      
-                  } label: {
-                      
-                      Image(systemName: "plus.circle.fill")
-                          .font(.title)
-                          .foregroundStyle(.primary)
-                  }
-                  .foregroundStyle(.primary)
-                  .frame(maxWidth: .infinity,alignment: .leading)
-
-              }
-              .padding()
-          })
-          // Changing Post Title Dynamic...
-          .navigationTitle(postTitle == "" ? "Post Title" : postTitle)
-          .navigationBarTitleDisplayMode(.inline)
-          .toolbar {
-              
-              ToolbarItem(placement: .navigationBarLeading) {
-                  
-                  if !showKeyboard{
-                      Button("Cancel"){
-                          blogData.createPost.toggle()
-                      }
-                  }
-              }
-              
-              ToolbarItem(placement: .navigationBarTrailing) {
-                  
-                  if showKeyboard{
-                      Button("Done"){
-                          // Closing Keyboard...
-                          showKeyboard.toggle()
-                      }
-                  }
-                  else{
-                      Button("Post"){
-                          blogData.writePost(content: postContent,author: authorName,postTitle: postTitle)
-                      }
-                      .disabled(authorName == "" || postTitle == "")
-                  }
-              }
-          }
+          rows
+          
+          menuButton
+        }
+        .padding()
       }
+      .navigationTitle(post.title == "" ? "Post Title" : post.title)
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .navigationBarLeading) {
+          if !showKeyboard { cancelButton }
+        }
+        ToolbarItem(placement: .navigationBarTrailing) {
+          if showKeyboard { doneButton }
+          else { postButton }
+        }
+      }
+    }
+  }
+  var rows: some View {
+    ForEach($post.postContent) { $content in
+      VStack {
+        if content.type == .image {
+          if content.showImage && content.value != "" {
+            WebImage(url: content.value)
+              .onTapGesture {
+                withAnimation {
+                  content.showImage = false
+                }
+              }
+          } else {
+            VStack {
+              TextField("Image URL", text: $content.value, onCommit: {
+                withAnimation {
+                  content.showImage = true
+                }
+              })
+              Divider()
+            }
+          }
+        } else {
+          TextView(text: $content.value, height: $content.height, fontSize: content.type.fontSize)
+            .focused($showKeyboard)
+            .frame(height: content.frameHeight)
+            .background(
+              Text(content.type.rawValue)
+                .font(.system(size: content.type.fontSize))
+                .foregroundColor(.gray)
+                .opacity(content.value == "" ? 0.7 : 0)
+                .padding(.leading, 5)
+              , alignment: .leading
+            )
+        }
+      } // VStack
+
+      .frame(width: UIScreen.main.bounds.width - 30)
+      .contentShape(Rectangle())
+      .gesture(
+        DragGesture()
+          .onEnded { value in
+            if -value.translation.width < (UIScreen.main.bounds.width / 2.5),
+                !content.showDeleteAlert {
+              content.showDeleteAlert = true
+            }
+          }
+      )
+      .alert("Sure to delete this content?", isPresented: $content.showDeleteAlert) {
+        Button("Delete", role: .destructive) {
+          if let index = post.postContent.firstIndex(where: { $0.id == content.id }) {
+            let _ = withAnimation {
+              post.postContent.remove(at: index)
+            }
+          }
+        }
+      }
+    } // ForEach
+  }
+  var menuButton: some View {
+    Menu {
+      ForEach(PostType.allCases, id: \.rawValue) { type in
+        Button(type.rawValue) {
+          withAnimation {
+            post.postContent.append(PostContent(value: "", type: type))
+          }
+        }
+      }
+    } label: {
+      Image(systemName: "plus.circle.fill")
+        .font(.title)
+        .foregroundColor(.primary)
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
+  }
+  var cancelButton: some View {
+    Button("Cancel") {
+      viewModel.showCreatePost.toggle()
+    }
+  }
+  var doneButton: some View {
+    Button("Done") {
+      showKeyboard.toggle()
+    }
+  }
+  var postButton: some View {
+    Button("Post") {
+      viewModel.addPost(post)
+    }
+    .disabled(post.title == "" || post.author == "")
   }
 }
 
 struct CreatePost_Previews: PreviewProvider {
   static var previews: some View {
     CreatePost()
+      .environmentObject(BlogViewModel())
   }
-}
-
-struct TextView: UIViewRepresentable {
-
-    @Binding var text: String
-    @Binding var height: CGFloat
-    var fontSize: CGFloat
-    
-    func makeCoordinator() -> Coordinator {
-        return TextView.Coordinator(parent: self)
-    }
-    
-    func makeUIView(context: Context) -> UITextView {
-        
-        let view = UITextView()
-        view.backgroundColor = .clear
-        view.font = .systemFont(ofSize: fontSize)
-        view.text = text
-        view.layoutManager.delegate = context.coordinator
-        view.delegate = context.coordinator
-        
-        return view
-    }
-    
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        
-    }
-    
-    class Coordinator: NSObject,UITextViewDelegate,NSLayoutManagerDelegate{
-        
-        var parent: TextView
-        
-        init(parent: TextView) {
-            self.parent = parent
-        }
-        
-        // Spacing...
-        func layoutManager(_ layoutManager: NSLayoutManager, lineSpacingAfterGlyphAt glyphIndex: Int, withProposedLineFragmentRect rect: CGRect) -> CGFloat {
-            return 10
-        }
-        
-        // For Dynamic Text height...
-        func textViewDidChange(_ textView: UITextView) {
-            
-            let height = textView.contentSize.height
-            
-            self.parent.height = height
-            
-            // Updaging Text...
-            self.parent.text = textView.text
-        }
-        
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            
-            let height = textView.contentSize.height
-            
-            self.parent.height = height
-        }
-    }
-}
-
-func getFontSize(type: PostType)->CGFloat{
-    // Your Own...
-    switch type {
-    case .Header:
-        return 24
-    case .SubHeading:
-        return 22
-    case .Paragraph:
-        return 18
-    case .Image:
-        return 18
-    }
-}
-
-struct WebImage: View{
-    
-    var url: String
-    
-    var body: some View{
-        
-        AsyncImage(url: URL(string: url)) { phase in
-            
-            if let image = phase.image{
-                image.resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width - 30,height: 250)
-
-                    .cornerRadius(15)
-            }
-            else{
-                
-                if let _ = phase.error{
-                    Text("Failed to load Image :(((")
-                }
-                else{
-                    ProgressView()
-                }
-            }
-        }
-        .frame(height: 250)
-
-    }
 }
